@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="service" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Cenarios" EntityType="service.Cenarios">
+                    <NavigationPropertyBinding Path="topicos" Target="Topicos"/>
+                    <NavigationPropertyBinding Path="payloads" Target="Payloads"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Cenarios"/>
+                </EntitySet>
+                <EntitySet Name="Topicos" EntityType="service.Topicos">
+                    <NavigationPropertyBinding Path="cenario" Target="Cenarios"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Topicos"/>
+                </EntitySet>
+                <EntitySet Name="Payloads" EntityType="service.Payloads">
+                    <NavigationPropertyBinding Path="cenario" Target="Cenarios"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Payloads"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Cenarios">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="area" Type="Edm.String" MaxLength="30"/>
+                <Property Name="cenario" Type="Edm.String" MaxLength="100"/>
+                <Property Name="tabela" Type="Edm.String" MaxLength="30"/>
+                <Property Name="versao" Type="Edm.String" MaxLength="3"/>
+                <Property Name="active" Type="Edm.Boolean" DefaultValue="false"/>
+                <NavigationProperty Name="topicos" Type="Collection(service.Topicos)" Partner="cenario">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <NavigationProperty Name="payloads" Type="Collection(service.Payloads)" Partner="cenario">
+                    <OnDelete Action="Cascade"/>
+                </NavigationProperty>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="service.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="service.Cenarios"/>
+            </EntityType>
+            <EntityType Name="Topicos">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="sequencia" Type="Edm.Int32"/>
+                <Property Name="campo" Type="Edm.String" MaxLength="30"/>
+                <NavigationProperty Name="cenario" Type="service.Cenarios" Partner="topicos">
+                    <ReferentialConstraint Property="cenario_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="cenario_ID" Type="Edm.Guid"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="service.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="service.Topicos"/>
+            </EntityType>
+            <EntityType Name="Payloads">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="sequencia" Type="Edm.Int32"/>
+                <Property Name="campoTabela" Type="Edm.String" MaxLength="30"/>
+                <Property Name="campoPayload" Type="Edm.String" MaxLength="50"/>
+                <NavigationProperty Name="cenario" Type="service.Cenarios" Partner="payloads">
+                    <ReferentialConstraint Property="cenario_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="cenario_ID" Type="Edm.Guid"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="service.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="service.Payloads"/>
+            </EntityType>
+            <EntityType Name="DraftAdministrativeData">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+            </EntityType>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="service.Cenarios"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="service.Cenarios"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="service.Topicos"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="service.Topicos"/>
+            </Action>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="service.Payloads"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="service.Payloads"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="service.Cenarios"/>
+                <ReturnType Type="service.Cenarios"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="service.Cenarios"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="service.Cenarios"/>
+            </Action>
+            <Annotations Target="service.EntityContainer/Cenarios">
+                <Annotation Term="Common.DraftRoot">
+                    <Record Type="Common.DraftRootType">
+                        <PropertyValue Property="ActivationAction" String="service.draftActivate"/>
+                        <PropertyValue Property="EditAction" String="service.draftEdit"/>
+                        <PropertyValue Property="PreparationAction" String="service.draftPrepare"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="service.Cenarios/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="service.Cenarios/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="service.Cenarios/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="service.Cenarios/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/area">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/cenario">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/tabela">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/versao">
+                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/IsActiveEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/HasActiveEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/HasDraftEntity">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="service.Cenarios/DraftAdministrativeData">
+                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="service.EntityContainer/Topicos">
+                                        <Annotation Term="Common.DraftNode">
+                                            <Record Type="Common.DraftNodeType">
+                                                <PropertyValue Property="PreparationAction" String="service.draftPrepare"/>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="service.Topicos/createdAt">
+                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                        </Annotations>
+                                        <Annotations Target="service.Topicos/createdBy">
+                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                            <Annotation Term="Core.Immutable" Bool="true"/>
+                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                </Annotations>
+                                                <Annotations Target="service.Topicos/modifiedAt">
+                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                    <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                    </Annotations>
+                                                    <Annotations Target="service.Topicos/modifiedBy">
+                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                            <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Topicos/sequencia">
+                                                                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Topicos/campo">
+                                                                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Topicos/IsActiveEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Topicos/HasActiveEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Topicos/HasDraftEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Topicos/DraftAdministrativeData">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="service.EntityContainer/Payloads">
+                                                                <Annotation Term="Common.DraftNode">
+                                                                    <Record Type="Common.DraftNodeType">
+                                                                        <PropertyValue Property="PreparationAction" String="service.draftPrepare"/>
+                                                                    </Record>
+                                                                </Annotation>
+                                                            </Annotations>
+                                                            <Annotations Target="service.Payloads/createdAt">
+                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                                                </Annotations>
+                                                                <Annotations Target="service.Payloads/createdBy">
+                                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                    <Annotation Term="Core.Immutable" Bool="true"/>
+                                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                                        </Annotations>
+                                                                        <Annotations Target="service.Payloads/modifiedAt">
+                                                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                                                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                                            </Annotations>
+                                                                            <Annotations Target="service.Payloads/modifiedBy">
+                                                                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/sequencia">
+                                                                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/campoTabela">
+                                                                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/campoPayload">
+                                                                                        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/IsActiveEntity">
+                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/HasActiveEntity">
+                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/HasDraftEntity">
+                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.Payloads/DraftAdministrativeData">
+                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="service.DraftAdministrativeData">
+                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftAdministrativeData}"/>
+                                                                                        </Annotations>
+                                                                                        <Annotations Target="service.DraftAdministrativeData/DraftUUID">
+                                                                                            <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_DraftUUID}"/>
+                                                                                            </Annotations>
+                                                                                            <Annotations Target="service.DraftAdministrativeData/CreationDateTime">
+                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_CreationDateTime}"/>
+                                                                                                </Annotations>
+                                                                                                <Annotations Target="service.DraftAdministrativeData/CreatedByUser">
+                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_CreatedByUser}"/>
+                                                                                                    </Annotations>
+                                                                                                    <Annotations Target="service.DraftAdministrativeData/DraftIsCreatedByMe">
+                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsCreatedByMe}"/>
+                                                                                                        </Annotations>
+                                                                                                        <Annotations Target="service.DraftAdministrativeData/LastChangeDateTime">
+                                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_LastChangeDateTime}"/>
+                                                                                                            </Annotations>
+                                                                                                            <Annotations Target="service.DraftAdministrativeData/LastChangedByUser">
+                                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_LastChangedByUser}"/>
+                                                                                                                </Annotations>
+                                                                                                                <Annotations Target="service.DraftAdministrativeData/InProcessByUser">
+                                                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_InProcessByUser}"/>
+                                                                                                                    </Annotations>
+                                                                                                                    <Annotations Target="service.DraftAdministrativeData/DraftIsProcessedByMe">
+                                                                                                                        <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsProcessedByMe}"/>
+                                                                                                                        </Annotations>
+                                                                                                                    </Schema>
+                                                                                                                </edmx:DataServices>
+                                                                                                            </edmx:Edmx>
